@@ -92,14 +92,47 @@ public class OnlineCoursesAnalyzer {
              ) {
             sortedmap.put(entry.getKey(),entry.getValue());
         }
-
         return sortedmap;
     }
 
     //3
     public Map<String, List<List<String>>> getCourseListOfInstructor() {
-        
-        return null;
+        Map<String,List<List<String>>> map = new HashMap<>();
+        Set<String> instructorsSet = new HashSet<>();
+        for (int i = 0; i < courses.size(); i++) {
+            Course temp = courses.get(i);
+            String[] str = temp.instructors.split(",");
+            for (int j = 0; j < str.length; j++) {
+                str[j] = str[j].trim();
+                instructorsSet.add(str[j]);
+            }
+        }
+        for (String temp : instructorsSet) {
+            List<String> a = new ArrayList<>();
+            List<String> c = new ArrayList<>();
+            List<List<String>> b = new ArrayList<>(2);
+            b.add(a);
+            b.add(c);
+            map.put(temp,b);
+        }
+        for (Course temp : courses) {
+            String[] str = temp.instructors.split(",");
+            if (str.length==1) {
+                str[0]=str[0].trim();
+                map.get(str[0]).get(0).add(temp.title);
+            }
+            else {
+                for (int i = 0; i < str.length; i++) {
+                    str[i] = str[i].trim();
+                    map.get(str[i]).get(1).add(temp.title);
+                }
+            }
+        }
+        for (String temp : instructorsSet) {
+            Collections.sort(map.get(temp).get(0));
+            Collections.sort(map.get(temp).get(1));
+        }
+        return map;
     }
 
     //4
