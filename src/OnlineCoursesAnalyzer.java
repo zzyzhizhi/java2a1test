@@ -119,11 +119,13 @@ public class OnlineCoursesAnalyzer {
             String[] str = temp.instructors.split(",");
             if (str.length==1) {
                 str[0]=str[0].trim();
+                if (!map.get(str[0]).get(0).contains(temp.title))
                 map.get(str[0]).get(0).add(temp.title);
             }
             else {
                 for (int i = 0; i < str.length; i++) {
                     str[i] = str[i].trim();
+                    if (!map.get(str[i]).get(1).contains(temp.title))
                     map.get(str[i]).get(1).add(temp.title);
                 }
             }
@@ -132,16 +134,74 @@ public class OnlineCoursesAnalyzer {
             Collections.sort(map.get(temp).get(0));
             Collections.sort(map.get(temp).get(1));
         }
+
         return map;
     }
 
     //4
     public List<String> getCourses(int topK, String by) {
-        return null;
+        List<String> list = new ArrayList<>();
+        if (Objects.equals(by, "hours")){
+            Set<String> title = new HashSet<>();
+            Map<String,Double> map = new HashMap<>();
+            for(Course temp:courses){
+                title.add(temp.title);
+            }
+            for(String temp : title){
+                map.put(temp,0.0);
+            }
+            for(Course temp : courses){
+                if (temp.totalHours>map.get(temp.title))
+                map.put(temp.title,temp.totalHours);
+            }
+            list.addAll(title);
+            Collections.sort(list, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    if (map.get(o1)<map.get(o2)) return 1;
+                    if (map.get(o1)>map.get(o2)) return -1;
+                    return o1.compareTo(o2);
+                }
+            });
+            List<String> list1 = new ArrayList<>();
+            for (int i = 0; i < topK; i++) {
+                list1.add(list.get(i));
+            }
+            return list1;
+        }
+        else {
+            Set<String> title = new HashSet<>();
+            Map<String,Integer> map = new HashMap<>();
+            for(Course temp:courses){
+                title.add(temp.title);
+            }
+            for(String temp : title){
+                map.put(temp,0);
+            }
+            for(Course temp : courses){
+                if (temp.participants>map.get(temp.title))
+                    map.put(temp.title,temp.participants);
+            }
+            list.addAll(title);
+            Collections.sort(list, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    if (map.get(o1)<map.get(o2)) return 1;
+                    if (map.get(o1)>map.get(o2)) return -1;
+                    return o1.compareTo(o2);
+                }
+            });
+            List<String> list1 = new ArrayList<>();
+            for (int i = 0; i < topK; i++) {
+                list1.add(list.get(i));
+            }
+            return list1;
+        }
     }
 
     //5
     public List<String> searchCourses(String courseSubject, double percentAudited, double totalCourseHours) {
+
         return null;
     }
 
