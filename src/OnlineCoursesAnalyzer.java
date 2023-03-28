@@ -201,12 +201,24 @@ public class OnlineCoursesAnalyzer {
 
     //5
     public List<String> searchCourses(String courseSubject, double percentAudited, double totalCourseHours) {
-
-        return null;
+        courseSubject = courseSubject.toUpperCase(Locale.ROOT);
+        for (Course temp : courses){
+            temp.subject = temp.subject.toUpperCase(Locale.ROOT);
+        }
+        Set<String> a = new HashSet<>();
+        for(Course temp : courses){
+            if (temp.subject.contains(courseSubject)&&temp.percentAudited>=percentAudited&&temp.totalHours<=totalCourseHours){
+                a.add(temp.title);
+            }
+        }
+        List<String> list = new ArrayList<>(a);
+        Collections.sort(list);
+        return list;
     }
 
     //6
     public List<String> recommendCourses(int age, int gender, int isBachelorOrHigher) {
+
         return null;
     }
 
